@@ -12,9 +12,9 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body { width: 100%; height: 100%; overflow: hidden; }
-        body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #e8dcc6 0%, #d4c4b0 100%); padding: 10px; font-size: 16px; }
+        body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #e8dcc6 0%, #d4c4b0 100%); padding: 0px; font-size: 16px; }
         .container { display: flex; flex-direction: column; height: 100vh; background: white; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); overflow: hidden; }
-        .header { background: #2d6b5f; color: white; padding: 15px; text-align: center; flex-shrink: 0; }
+        .header { background: #2d6b5f; color: white; padding: 15px; text-align: center; flex: 0 0 auto; }
         .header h1 { font-size: 1.5em; margin-bottom: 5px; }
         .header p { font-size: 0.9em; opacity: 0.9; margin-bottom: 12px; }
         .event-name-section { display: flex; gap: 8px; justify-content: center; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
@@ -25,7 +25,7 @@
         .tabs { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; }
         .tab-btn { padding: 8px 12px; background: rgba(45,107,95,0.3); color: white; border: 1px solid white; border-radius: 4px; cursor: pointer; font-size: 0.85em; }
         .tab-btn.active { background: #c9a84a; color: #2d6b5f; font-weight: bold; }
-        .content { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; min-height: 0; }
+        .content { flex: 1 1 auto; overflow-y: auto; -webkit-overflow-scrolling: touch; min-height: 0; }
         table { width: 100%; border-collapse: collapse; }
         th { background: #2d6b5f; color: white; padding: 15px 12px; text-align: center; font-weight: bold; border-bottom: 2px solid #ccc; font-size: 0.9em; position: sticky; top: 0; z-index: 10; }
         td { padding: 10px 6px; text-align: center; border-bottom: 1px solid #eee; }
@@ -37,7 +37,7 @@
         .btn-plus:active { background: #1f4a40; }
         .btn-minus { background: #c9a84a; }
         .btn-minus:active { background: #a88a37; }
-        .footer { background: #f5f5f5; padding: 12px; border-top: 2px solid #ddd; flex-shrink: 0; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+        .footer { background: #f5f5f5; padding: 12px; border-top: 2px solid #ddd; flex: 0 0 auto; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
         .footer button { background: #2d6b5f; padding: 10px 15px; font-size: 0.9em; min-width: auto; }
         .btn-export { background: #c9a84a !important; }
         .btn-reset { background: #d9534f !important; }
@@ -50,9 +50,8 @@
         .total-row { background: #f5f5f5; font-weight: bold; }
         .total-row td { background: #e8dcc6; padding: 12px 8px; border-top: 2px solid #2d6b5f; }
         .total-row td:first-child { background: #f5f5f5; }
-        @media (max-width: 480px) { body { font-size: 14px; padding: 5px; } .header { padding: 8px 5px; } .header h1 { font-size: 1em; margin-bottom: 2px; } .header p { font-size: 0.7em; margin-bottom: 5px; } .event-name-section { gap: 3px; margin-bottom: 5px; } .event-name-section label { font-size: 0.75em; } .event-name-section input { width: 100%; max-width: 100px; padding: 4px; font-size: 0.8em; } .event-name-section button { padding: 4px 6px; font-size: 0.75em; } .tab-btn { padding: 6px 8px; font-size: 0.7em; } button { padding: 8px 4px; font-size: 0.8em; min-width: 35px; } td { padding: 6px 3px; font-size: 0.75em; } th { padding: 8px 4px; font-size: 0.75em; } .time-display { font-size: 0.7em; padding: 4px 8px; min-width: 90px; } .footer { padding: 6px; gap: 3px; } .footer button { padding: 6px 10px; font-size: 0.8em; } }
-        @media (min-width: 768px) { .header { padding: 25px; } .header h1 { font-size: 2em; } button { padding: 15px 12px; font-size: 1em; min-width: 60px; } th { padding: 15px; font-size: 1em; } td { padding: 15px 10px; } }
-    </style>
+        @media (max-width: 480px) { body { font-size: 11px; padding: 0px; } .container { height: 100vh; border-radius: 0px !important; box-shadow: none !important; } .header { padding: 2px 2px !important; } .header h1 { font-size: 0.8em !important; margin-bottom: 0px !important; } .header p { display: none !important; } .event-name-section { display: none !important; } .tabs { gap: 2px; margin: 1px 0px; } .tab-btn { padding: 3px 4px !important; font-size: 0.6em !important; } .content { flex: 1 1 auto !important; overflow-y: auto !important; min-height: 0px !important; } table { width: 100%; } th { padding: 3px 2px !important; font-size: 0.65em !important; } td { padding: 3px 1px !important; font-size: 0.65em !important; } button { padding: 5px 3px !important; font-size: 0.7em !important; min-width: 28px !important; } .footer { padding: 2px 1px !important; gap: 2px !important; flex: 0 0 auto !important; display: flex !important; } .footer button { padding: 3px 5px !important; font-size: 0.7em !important; } .time-display { font-size: 0.6em !important; padding: 2px 4px !important; } }
+        </style>
 </head>
 <body>
     <div class="container">
