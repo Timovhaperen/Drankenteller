@@ -15,6 +15,7 @@
         body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #e8dcc6 0%, #d4c4b0 100%); padding: 0px; font-size: 16px; }
         .container { display: flex; flex-direction: column; height: 100vh; background: white; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); overflow: hidden; }
         .header { background: #2d6b5f; color: white; padding: 15px; text-align: center; flex: 0 0 auto; }
+        .header-save-btn { background: #d9534f; color: white; border: none; padding: 8px 16px; border-radius: 4px; font-weight: bold; font-size: 0.9em; cursor: pointer; margin-top: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         .header h1 { font-size: 1.5em; margin-bottom: 5px; }
         .header p { font-size: 0.9em; opacity: 0.9; margin-bottom: 12px; }
         .event-name-section { display: flex; gap: 8px; justify-content: center; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
@@ -50,8 +51,21 @@
         .total-row { background: #f5f5f5; font-weight: bold; }
         .total-row td { background: #e8dcc6; padding: 12px 8px; border-top: 2px solid #2d6b5f; }
         .total-row td:first-child { background: #f5f5f5; }
-        @media (max-width: 480px) { body { font-size: 11px; padding: 0px; } .container { height: 100vh; border-radius: 0px !important; box-shadow: none !important; } .header { padding: 2px 2px !important; } .header h1 { font-size: 0.8em !important; margin-bottom: 0px !important; } .header p { display: none !important; } .event-name-section { display: none !important; } .tabs { gap: 2px; margin: 1px 0px; } .tab-btn { padding: 3px 4px !important; font-size: 0.6em !important; } .content { flex: 1 1 auto !important; overflow-y: auto !important; min-height: 0px !important; } table { width: 100%; } th { padding: 3px 2px !important; font-size: 0.65em !important; } td { padding: 3px 1px !important; font-size: 0.65em !important; } button { padding: 5px 3px !important; font-size: 0.7em !important; min-width: 28px !important; } .footer { padding: 2px 1px !important; gap: 2px !important; flex: 0 0 auto !important; display: flex !important; } .footer button { padding: 3px 5px !important; font-size: 0.7em !important; } .time-display { font-size: 0.6em !important; padding: 2px 4px !important; } }
-        @media (max-height: 500px) { .header { padding: 1px !important; } .header h1 { font-size: 0.6em !important; margin-bottom: 0px !important; } .header p { display: none !important; } .event-name-section { display: none !important; } .tabs { gap: 1px !important; margin: 0px !important; } .tab-btn { padding: 2px 3px !important; font-size: 0.5em !important; } th { padding: 2px 1px !important; font-size: 0.6em !important; } td { padding: 2px 1px !important; font-size: 0.6em !important; } button { padding: 3px 2px !important; font-size: 0.65em !important; } .footer { padding: 1px !important; gap: 1px !important; } .footer button { padding: 2px 4px !important; font-size: 0.65em !important; } .time-display { font-size: 0.55em !important; padding: 1px 2px !important; } }
+        .settings-panel { padding: 10px; background: white; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        #pricesPanel { padding: 0 !important; overflow: hidden !important; }
+        .settings-form { max-width: 400px; margin: 0 auto; padding: 5px; }
+        .form-group { margin-bottom: 10px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #2d6b5f; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 1em; box-sizing: border-box; }
+        .settings-form button { width: 100%; padding: 12px; background: #2d6b5f; color: white; border: none; border-radius: 4px; font-size: 1em; font-weight: bold; cursor: pointer; }
+        .settings-form button:active { background: #1f4a40; }
+        .settings-form h2 { margin-bottom: 10px; color: #2d6b5f; font-size: 1em; }
+        .save-prices-btn { padding: 16px !important; background: #d9534f !important; font-size: 1.1em !important; font-weight: bold !important; border-radius: 6px; box-shadow: 0 3px 6px rgba(0,0,0,0.3); color: white !important; width: 100%; margin: 0 !important; }
+        .prices-panel-container { display: flex; flex-direction: column; height: 100%; width: 100%; }
+        .prices-list { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 5px 5px 80px 5px; }
+        .prices-button-fixed { flex-shrink: 0; padding: 15px; background: white; border-top: 2px solid #ddd; }
+        @media (max-width: 480px) { body { font-size: 11px; padding: 0px; } .container { height: 100vh; border-radius: 0px !important; box-shadow: none !important; } .header { padding: 2px 2px !important; } .header h1 { font-size: 0.8em !important; margin-bottom: 0px !important; } .header p { display: none !important; } .event-name-section { display: none !important; } .tabs { gap: 2px; margin: 1px 0px; } .tab-btn { padding: 3px 4px !important; font-size: 0.6em !important; } .content { flex: 1 1 auto !important; overflow-y: auto !important; min-height: 0px !important; } table { width: 100%; } th { padding: 3px 2px !important; font-size: 0.65em !important; } td { padding: 3px 1px !important; font-size: 0.65em !important; } button { padding: 5px 3px !important; font-size: 0.7em !important; min-width: 28px !important; } .save-prices-btn { padding: 10px !important; font-size: 0.85em !important; margin-top: 15px !important; } .footer { padding: 2px 1px !important; gap: 2px !important; flex: 0 0 auto !important; display: flex !important; } .footer button { padding: 3px 5px !important; font-size: 0.7em !important; } .time-display { font-size: 0.6em !important; padding: 2px 4px !important; } }
+        @media (max-height: 500px) { .header { padding: 1px !important; } .header h1 { font-size: 0.6em !important; margin-bottom: 0px !important; } .header p { display: none !important; } .event-name-section { display: none !important; } .tabs { gap: 1px !important; margin: 0px !important; } .tab-btn { padding: 2px 3px !important; font-size: 0.5em !important; } th { padding: 2px 1px !important; font-size: 0.6em !important; } td { padding: 2px 1px !important; font-size: 0.6em !important; } button { padding: 3px 2px !important; font-size: 0.65em !important; } .save-prices-btn { padding: 6px !important; font-size: 0.7em !important; } .footer { padding: 1px !important; gap: 1px !important; } .footer button { padding: 2px 4px !important; font-size: 0.65em !important; } .time-display { font-size: 0.55em !important; padding: 1px 2px !important; } }
         </style>
 </head>
 <body>
@@ -59,19 +73,52 @@
         <div class="header">
             <h1>Drankenlijst</h1>
             <p>Het Houtse Meer - Klik knoppen om drankjes in/uit te slaan</p>
-            <div class="event-name-section">
-                <label>Naam:</label>
-                <input type="text" id="eventName" placeholder="Bijv. Bruiloft">
-                <button onclick="saveEventName()">Opslaan</button>
-            </div>
             <div class="tabs" id="tabsContainer"></div>
+            <button class="header-save-btn" onclick="saveAllData()">💾 OPSLAAN</button>
         </div>
         
         <div class="content">
-            <table>
+            <div id="settingsPanel" class="settings-panel" style="display: none;">
+                <div class="settings-form">
+                    <h2>Evenement Details</h2>
+                    <div class="form-group">
+                        <label>Naam evenement:</label>
+                        <input type="text" id="eventName" placeholder="Bijv. Bruiloft">
+                    </div>
+                    <div class="form-group">
+                        <label>Aantal gasten:</label>
+                        <input type="number" id="numberOfGuests" placeholder="Bijv. 50" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Soort partij:</label>
+                        <select id="partyType">
+                            <option value="">Kies een type...</option>
+                            <option value="Particuliere bijeenkomst">Particuliere bijeenkomst</option>
+                            <option value="Zakelijke vergadering">Zakelijke vergadering</option>
+                            <option value="Zakelijke bijeenkomst">Zakelijke bijeenkomst</option>
+                        </select>
+                    </div>
+                    <p style="font-size: 0.9em; color: #666; margin-top: 15px;">💾 Klik OPSLAAN in header om op te slaan</p>
+                </div>
+            </div>
+            
+            <div id="pricesPanel" class="settings-panel" style="display: none;">
+                <div class="prices-panel-container">
+                    <div style="padding: 5px;">
+                        <h2 style="margin: 0 0 10px 0; color: #2d6b5f; font-size: 1em;">Drankprijzen</h2>
+                        <p style="font-size: 0.85em; color: #666; margin-bottom: 10px;">💾 Wijzigingen worden opgeslagen met de OPSLAAN knop in header</p>
+                    </div>
+                    <div class="prices-list">
+                        <div id="pricesContainer"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <table id="drinksTable" style="width: 100%;">
                 <thead>
                     <tr>
                         <th>Drankje</th>
+                        <th>Prijs</th>
                         <th>Totaal</th>
                         <th colspan="2">+</th>
                         <th colspan="2">-</th>
@@ -81,8 +128,9 @@
                 <tfoot>
                     <tr class="total-row">
                         <td>TOTAAL</td>
+                        <td id="totalPrice">€0.00</td>
                         <td class="totaal" id="grandTotal">0</td>
-                        <td colspan="4"></td>
+                        <td colspan="3"></td>
                     </tr>
                 </tfoot>
             </table>
@@ -118,21 +166,40 @@
         let eventName = '';
         let currentCategory = 'Hardlopers';
         let counts = {};
+        let numberOfGuests = 0;
+        let partyType = '';
+        let prices = {};
         
-        function loadEventName() {
-            const saved = localStorage.getItem('eventName');
-            if (saved) {
-                eventName = saved;
+        function loadSettings() {
+            const eventNameSaved = localStorage.getItem('eventName');
+            if (eventNameSaved) {
+                eventName = eventNameSaved;
                 document.getElementById('eventName').value = eventName;
+            }
+            
+            const guestsSaved = localStorage.getItem('numberOfGuests');
+            if (guestsSaved) {
+                numberOfGuests = parseInt(guestsSaved);
+                document.getElementById('numberOfGuests').value = numberOfGuests;
+            }
+            
+            const typeSaved = localStorage.getItem('partyType');
+            if (typeSaved) {
+                partyType = typeSaved;
+                document.getElementById('partyType').value = partyType;
             }
         }
         
-        function saveEventName() {
+        function saveSettings() {
             eventName = document.getElementById('eventName').value.trim();
-            if (eventName) {
-                localStorage.setItem('eventName', eventName);
-                alert('Opgeslagen');
-            }
+            numberOfGuests = document.getElementById('numberOfGuests').value.trim();
+            partyType = document.getElementById('partyType').value.trim();
+            
+            if (eventName) localStorage.setItem('eventName', eventName);
+            if (numberOfGuests) localStorage.setItem('numberOfGuests', numberOfGuests);
+            if (partyType) localStorage.setItem('partyType', partyType);
+            
+            alert('Instellingen opgeslagen!');
         }
         
         function loadData() {
@@ -162,22 +229,170 @@
             localStorage.setItem('drankenCounts', JSON.stringify(counts));
         }
         
+        function initializePrices() {
+            const result = {};
+            for (const cat in categories) {
+                for (const drink of categories[cat]) {
+                    result[drink] = 0;
+                }
+            }
+            return result;
+        }
+        
+        function displayPriceInputs() {
+            const container = document.getElementById('pricesContainer');
+            container.innerHTML = '';
+            
+            for (const cat in categories) {
+                // Categorie header
+                const catHeader = document.createElement('h3');
+                catHeader.textContent = cat;
+                catHeader.style.marginTop = '8px';
+                catHeader.style.marginBottom = '5px';
+                catHeader.style.color = '#2d6b5f';
+                catHeader.style.fontSize = '0.9em';
+                container.appendChild(catHeader);
+                
+                // Dranken in deze categorie
+                for (const drink of categories[cat]) {
+                    const group = document.createElement('div');
+                    group.className = 'price-input-group';
+                    group.style.display = 'flex';
+                    group.style.gap = '10px';
+                    group.style.marginBottom = '4px';
+                    
+                    const label = document.createElement('label');
+                    label.textContent = drink;
+                    label.style.flex = '1';
+                    label.style.alignSelf = 'center';
+                    label.style.fontSize = '0.85em';
+                    
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.id = 'price-' + drink.replace(/ /g, '-');
+                    input.step = '0.01';
+                    input.min = '0';
+                    input.value = prices[drink] || 0;
+                    input.style.width = '80px';
+                    input.style.padding = '6px';
+                    input.style.fontSize = '0.85em';
+                    
+                    group.appendChild(label);
+                    group.appendChild(input);
+                    container.appendChild(group);
+                }
+            }
+        }
+        
+        function loadPrices() {
+            const saved = localStorage.getItem('drankenPrices');
+            if (saved) {
+                try {
+                    return JSON.parse(saved);
+                } catch(e) {
+                    return initializePrices();
+                }
+            }
+            return initializePrices();
+        }
+        
+        function savePrices() {
+            localStorage.setItem('drankenPrices', JSON.stringify(prices));
+        }
+        
+        function savePricesToStorage() {
+            // Verzamel alle prijzen van de inputs
+            for (const cat in categories) {
+                for (const drink of categories[cat]) {
+                    const inputId = 'price-' + drink.replace(/ /g, '-');
+                    const input = document.getElementById(inputId);
+                    if (input) {
+                        prices[drink] = parseFloat(input.value) || 0;
+                    }
+                }
+            }
+            savePrices();
+            alert('Prijzen opgeslagen!');
+        }
+        
+        function saveAllData() {
+            // Sla alles op: settings, prijzen, en dranken tellingen
+            
+            // Settings opslaan
+            eventName = document.getElementById('eventName')?.value?.trim() || '';
+            numberOfGuests = document.getElementById('numberOfGuests')?.value?.trim() || '';
+            partyType = document.getElementById('partyType')?.value?.trim() || '';
+            
+            if (eventName) localStorage.setItem('eventName', eventName);
+            if (numberOfGuests) localStorage.setItem('numberOfGuests', numberOfGuests);
+            if (partyType) localStorage.setItem('partyType', partyType);
+            
+            // Prijzen opslaan
+            for (const cat in categories) {
+                for (const drink of categories[cat]) {
+                    const inputId = 'price-' + drink.replace(/ /g, '-');
+                    const input = document.getElementById(inputId);
+                    if (input) {
+                        prices[drink] = parseFloat(input.value) || 0;
+                    }
+                }
+            }
+            savePrices();
+            
+            // Dranken tellingen opslaan
+            saveData();
+            
+            alert('Alles opgeslagen! 💾');
+        }
+        
         function initTabs() {
             const container = document.getElementById('tabsContainer');
             container.innerHTML = '';
             let first = true;
+            
+            // Instellingen tab
+            const settingsBtn = document.createElement('button');
+            settingsBtn.className = 'tab-btn' + (first ? ' active' : '');
+            settingsBtn.textContent = '⚙️ Instellingen';
+            settingsBtn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                settingsBtn.classList.add('active');
+                document.getElementById('settingsPanel').style.display = 'block';
+                document.getElementById('pricesPanel').style.display = 'none';
+                document.getElementById('drinksTable').style.display = 'none';
+            });
+            container.appendChild(settingsBtn);
+            first = false;
+            
+            // Drankprijzen tab
+            const pricesBtn = document.createElement('button');
+            pricesBtn.className = 'tab-btn';
+            pricesBtn.textContent = '💰 Drankprijzen';
+            pricesBtn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                pricesBtn.classList.add('active');
+                document.getElementById('settingsPanel').style.display = 'none';
+                document.getElementById('pricesPanel').style.display = 'block';
+                document.getElementById('drinksTable').style.display = 'none';
+                displayPriceInputs();
+            });
+            container.appendChild(pricesBtn);
+            
+            // Drank tabs
             for (const cat in categories) {
                 const btn = document.createElement('button');
-                btn.className = 'tab-btn' + (first ? ' active' : '');
+                btn.className = 'tab-btn';
                 btn.textContent = cat;
                 btn.addEventListener('click', function() {
                     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     currentCategory = cat;
+                    document.getElementById('settingsPanel').style.display = 'none';
+                    document.getElementById('pricesPanel').style.display = 'none';
+                    document.getElementById('drinksTable').style.display = 'table';
                     initTable();
                 });
                 container.appendChild(btn);
-                first = false;
             }
         }
         
@@ -194,6 +409,11 @@
                 const cellName = document.createElement('td');
                 cellName.textContent = drink;
                 row.appendChild(cellName);
+                
+                // Prijs
+                const cellPrice = document.createElement('td');
+                cellPrice.textContent = '€' + (prices[drink] || 0).toFixed(2);
+                row.appendChild(cellPrice);
                 
                 // Totaal count
                 const cellCount = document.createElement('td');
@@ -263,10 +483,15 @@
         
         function updateTotals() {
             let total = 0;
+            let totalPrice = 0;
             for (const drink of categories[currentCategory]) {
-                total += counts[currentCategory][drink] || 0;
+                const count = counts[currentCategory][drink] || 0;
+                total += count;
+                const price = prices[drink] || 0;
+                totalPrice += count * price;
             }
             document.getElementById('grandTotal').textContent = total;
+            document.getElementById('totalPrice').textContent = '€' + totalPrice.toFixed(2);
         }
         
         function updateTime() {
@@ -282,10 +507,16 @@
         }
         
         function resetAll() {
-            if (confirm('Alles resetten?')) {
-                counts = initializeCounts();
-                saveData();
-                initTable();
+            if (confirm('Wil je alle dranken tellingen resetten? Instellingen en prijzen blijven behouden.')) {
+                try {
+                    // Reset alleen de dranken tellingen
+                    counts = initializeCounts();
+                    saveData();
+                    initTable();
+                    alert('Alle dranken tellingen gereset! ✅');
+                } catch(e) {
+                    alert('Error bij reset: ' + e.message);
+                }
             }
         }
         
@@ -470,14 +701,19 @@
                     counts = initializeCounts();
                 }
                 
-                console.log('Event name laden...');
-                loadEventName();
+                console.log('Settings laden...');
+                loadSettings();
+                
+                console.log('Prijzen laden...');
+                prices = loadPrices();
                 
                 console.log('Tabs initialiseren...');
                 initTabs();
                 
-                console.log('Tabel initialiseren...');
-                initTable();
+                console.log('Settings panel tonen...');
+                document.getElementById('settingsPanel').style.display = 'block';
+                document.getElementById('pricesPanel').style.display = 'none';
+                document.getElementById('drinksTable').style.display = 'none';
                 
                 console.log('Timer starten...');
                 setInterval(updateTime, 1000);
