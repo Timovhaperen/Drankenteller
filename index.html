@@ -153,6 +153,7 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script>
         const categories = {
             'Hardlopers': ['Cola', 'Cola Zero', 'Spa blauw', 'Spa rood', 'Ice tea', 'Ice tea green', 'Droge witte wijn (verdejo)', 'Rose wijn', 'Rode wijn (garnacha)', 'Peroni', 'Liefmans', 'Radler 0.0', 'Koffie', 'Cappucino', 'Thee'],
@@ -171,7 +172,8 @@
         let prices = {};
         
         // Google Sheets CSV export URL
-        const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1dkgtS8fqWggD2-za5gD2U2gtiT1OsVG0yvXyEnxMCGs/export?format=csv&gid=0';
+        const GOOGLE_SHEET_ID = '1dkgtS8fqWggD2-za5gD2U2gtiT1OsVG0yvXyEnxMCGs';
+        const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/' + GOOGLE_SHEET_ID + '/export?format=csv&gid=0';
         
         function loadSettings() {
             const eventNameSaved = localStorage.getItem('eventName');
@@ -304,35 +306,64 @@
         }
         
         function loadPricesFromGoogleSheets() {
-            fetch(GOOGLE_SHEET_URL)
-                .then(response => response.text())
+            console.log('Bezig met laden van Google Sheet...');
+            
+            // Gebruik CORS proxy voor Google Sheets
+            const csvUrl = GOOGLE_SHEET_URL;
+            const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+            
+            fetch(csvUrl)
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.text();
+                })
                 .then(data => {
-                    // Parse CSV
-                    const lines = data.trim().split('\n');
+                    console.log('CSV data ontvangen');
                     
-                    for (let i = 1; i < lines.length; i++) {
-                        const line = lines[i];
-                        if (!line.trim()) continue;
-                        
-                        // Parse CSV line (handle quotes)
-                        const parts = line.split(',');
-                        if (parts.length >= 2) {
-                            const drankNaam = parts[0].replace(/"/g, '').trim();
-                            const prijs = parseFloat(parts[1].replace(/"/g, '').trim());
+                    // Parse met Papa Parse
+                    Papa.parse(data, {
+                        header: false,
+                        skipEmptyLines: true,
+                        complete: function(results) {
+                            console.log('Papa Parse voltooid, totaal rijen:', results.data.length);
                             
-                            if (drankNaam && !isNaN(prijs)) {
-                                prices[drankNaam] = prijs;
+                            let loaded = 0;
+                            // Skip header (eerste rij)
+                            for (let i = 1; i < results.data.length; i++) {
+                                const row = results.data[i];
+                                
+                                if (row && row.length >= 2) {
+                                    const drankNaam = (row[0] || '').trim();
+                                    const prijsStr = (row[1] || '').trim();
+                                    const prijs = parseFloat(prijsStr);
+                                    
+                                    console.log('Rij ' + i + ': "' + drankNaam + '" = ' + prijs);
+                                    
+                                    if (drankNaam && !isNaN(prijs) && prijs > 0) {
+                                        prices[drankNaam] = prijs;
+                                        loaded++;
+                                    }
+                                }
                             }
+                            
+                            console.log('✅ ' + loaded + ' prijzen geladen uit Google Sheet');
+                            
+                            if (loaded > 0) {
+                                savePrices(); // Opslaan in localStorage
+                                if (document.getElementById('drinksTable') && document.getElementById('drinksTable').style.display !== 'none') {
+                                    initTable(); // Refresh tabel
+                                }
+                            }
+                        },
+                        error: function(error) {
+                            console.error('Papa Parse error:', error);
                         }
-                    }
-                    
-                    console.log('Prijzen geladen uit Google Sheet:', Object.keys(prices).length, 'dranken');
-                    if (document.getElementById('drinksTable')) {
-                        initTable(); // Refresh tabel met nieuwe prijzen
-                    }
+                    });
                 })
                 .catch(error => {
-                    console.error('Fout bij laden Google Sheet:', error);
+                    console.error('❌ Fout bij laden Google Sheet:', error);
+                    console.error('Fout details:', error.message);
                 });
         }
         
