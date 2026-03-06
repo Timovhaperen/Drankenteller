@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1">
+    <title>Drankenlijst Evenement</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; overflow: hidden; }
+        body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #e8dcc6 0%, #d4c4b0 100%); padding: 10px; font-size: 16px; }
+        .container { display: flex; flex-direction: column; height: 100vh; background: white; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); overflow: hidden; }
+        .header { background: #2d6b5f; color: white; padding: 15px; text-align: center; flex-shrink: 0; }
+        .header h1 { font-size: 1.5em; margin-bottom: 5px; }
+        .header p { font-size: 0.9em; opacity: 0.9; margin-bottom: 12px; }
+        .event-name-section { display: flex; gap: 8px; justify-content: center; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+        .event-name-section label { font-size: 0.9em; }
+        .event-name-section input { padding: 8px; border: 1px solid white; border-radius: 4px; background: rgba(255,255,255,0.2); color: white; font-size: 0.9em; width: 100%; max-width: 180px; }
+        .event-name-section input::placeholder { color: rgba(255,255,255,0.6); }
+        .event-name-section button { padding: 8px 12px; background: rgba(255,255,255,0.3); color: white; border: 1px solid white; border-radius: 4px; font-size: 0.9em; }
+        .tabs { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; }
+        .tab-btn { padding: 8px 12px; background: rgba(45,107,95,0.3); color: white; border: 1px solid white; border-radius: 4px; cursor: pointer; font-size: 0.85em; }
+        .tab-btn.active { background: #c9a84a; color: #2d6b5f; font-weight: bold; }
+        .content { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #2d6b5f; color: white; padding: 15px 12px; text-align: center; font-weight: bold; border-bottom: 2px solid #ccc; font-size: 0.9em; position: sticky; top: 0; z-index: 10; }
+        td { padding: 10px 6px; text-align: center; border-bottom: 1px solid #eee; }
+        td:first-child { text-align: left; font-weight: 500; padding-left: 12px; }
+        .totaal { background: #e8dcc6; font-weight: bold; }
+        button { padding: 12px 8px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; color: white; font-size: 0.95em; min-width: 45px; -webkit-user-select: none; user-select: none; touch-action: manipulation; }
+        button:active { transform: scale(0.95); opacity: 0.8; }
+        .btn-plus { background: #2d6b5f; }
+        .btn-plus:active { background: #1f4a40; }
+        .btn-minus { background: #c9a84a; }
+        .btn-minus:active { background: #a88a37; }
+        .footer { background: #f5f5f5; padding: 12px; border-top: 2px solid #ddd; flex-shrink: 0; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+        .footer button { background: #2d6b5f; padding: 10px 15px; font-size: 0.9em; min-width: auto; }
+        .btn-export { background: #c9a84a !important; }
+        .btn-reset { background: #d9534f !important; }
+        .time-display { background: #e8dcc6; padding: 8px 12px; border-radius: 5px; font-size: 0.85em; text-align: center; min-width: 120px; color: #2d6b5f; font-weight: bold; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); }
+        .modal-content { background-color: #fefefe; margin: 50px auto; padding: 20px; border-radius: 8px; width: 90%; max-width: 500px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .modal-content h2 { margin-bottom: 15px; color: #333; }
+        .modal-content button { margin-top: 15px; width: 100%; padding: 12px !important; }
+        .close-modal { background: #999 !important; }
+        .total-row { background: #f5f5f5; font-weight: bold; }
+        .total-row td { background: #e8dcc6; padding: 12px 8px; border-top: 2px solid #2d6b5f; }
+        .total-row td:first-child { background: #f5f5f5; }
+        @media (max-width: 480px) { body { font-size: 14px; padding: 5px; } .header { padding: 10px; } .header h1 { font-size: 1.2em; } .header p { font-size: 0.8em; } .tab-btn { padding: 6px 8px; font-size: 0.75em; } button { padding: 10px 6px; font-size: 0.85em; min-width: 40px; } td { padding: 8px 4px; font-size: 0.8em; } th { padding: 10px 6px; font-size: 0.8em; } .event-name-section { gap: 4px; } .event-name-section input { width: 100%; max-width: 120px; padding: 6px; font-size: 0.85em; } .time-display { font-size: 0.75em; padding: 6px 10px; min-width: 100px; } .footer { padding: 8px; gap: 4px; } }
+        @media (min-width: 768px) { .header { padding: 25px; } .header h1 { font-size: 2em; } button { padding: 15px 12px; font-size: 1em; min-width: 60px; } th { padding: 15px; font-size: 1em; } td { padding: 15px 10px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Drankenlijst</h1>
+            <p>Het Houtse Meer - Klik knoppen om drankjes in/uit te slaan</p>
+            <div class="event-name-section">
+                <label>Naam:</label>
+                <input type="text" id="eventName" placeholder="Bijv. Bruiloft">
+                <button onclick="saveEventName()">Opslaan</button>
+            </div>
+            <div class="tabs" id="tabsContainer"></div>
+        </div>
+        
+        <div class="content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Drankje</th>
+                        <th>Totaal</th>
+                        <th colspan="2">+</th>
+                        <th colspan="2">-</th>
+                    </tr>
+                </thead>
+                <tbody id="drinksList"></tbody>
+                <tfoot>
+                    <tr class="total-row">
+                        <td>TOTAAL</td>
+                        <td class="totaal" id="grandTotal">0</td>
+                        <td colspan="4"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        
+        <div class="footer">
+            <button class="btn-export" onclick="showExportMenu()">Export</button>
+            <button class="btn-reset" onclick="resetAll()">Reset</button>
+            <div class="time-display" id="timeDisplay">00:00:00</div>
+        </div>
+    </div>
+
+    <div id="exportModal" class="modal">
+        <div class="modal-content">
+            <h2>Export formaat:</h2>
+            <button onclick="exportAsExcel()" style="background: #c9a84a;">Excel</button>
+            <button onclick="exportAsCSV()" style="background: #2d6b5f;">CSV</button>
+            <button onclick="exportAsText()" style="background: #2d6b5f;">Tekst</button>
+            <button class="close-modal" onclick="closeModal()">Annuleren</button>
+        </div>
+    </div>
+
+    <script>
+        const categories = {
+            'Hardlopers': ['Cola', 'Cola Zero', 'Spa blauw', 'Spa rood', 'Ice tea', 'Ice tea green', 'Droge witte wijn (verdejo)', 'Rose wijn', 'Rode wijn (garnacha)', 'Peroni', 'Liefmans', 'Radler 0.0', 'Koffie', 'Cappucino', 'Thee'],
+            'Koude dranken': ['Frisdrank', 'Sap', 'Smoothie', 'Ijsthee'],
+            'Warme dranken': ['Koffie', 'Thee', 'Warme Chocolade', 'Gluehwein'],
+            'Bieren': ['Pils', 'IPA', 'Stout', 'Blonde'],
+            'Wijnen': ['Wijn rood', 'Wijn wit', 'Wijn rose', 'Champagne']
+        };
+        
+        const startTime = new Date();
+        let eventName = '';
+        let currentCategory = 'Hardlopers';
+        let counts = {};
+        
+        function loadEventName() {
+            const saved = localStorage.getItem('eventName');
+            if (saved) {
+                eventName = saved;
+                document.getElementById('eventName').value = eventName;
+            }
+        }
+        
+        function saveEventName() {
+            eventName = document.getElementById('eventName').value.trim();
+            if (eventName) {
+                localStorage.setItem('eventName', eventName);
+                alert('Opgeslagen');
+            }
+        }
+        
+        function loadData() {
+            const saved = localStorage.getItem('drankenCounts');
+            if (saved) {
+                try {
+                    return JSON.parse(saved);
+                } catch(e) {
+                    return initializeCounts();
+                }
+            }
+            return initializeCounts();
+        }
+        
+        function initializeCounts() {
+            const result = {};
+            for (const cat in categories) {
+                result[cat] = {};
+                for (const drink of categories[cat]) {
+                    result[cat][drink] = 0;
+                }
+            }
+            return result;
+        }
+        
+        function saveData() {
+            localStorage.setItem('drankenCounts', JSON.stringify(counts));
+        }
+        
+        function initTabs() {
+            const container = document.getElementById('tabsContainer');
+            container.innerHTML = '';
+            let first = true;
+            for (const cat in categories) {
+                const btn = document.createElement('button');
+                btn.className = 'tab-btn' + (first ? ' active' : '');
+                btn.textContent = cat;
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentCategory = cat;
+                    initTable();
+                });
+                container.appendChild(btn);
+                first = false;
+            }
+        }
+        
+        function initTable() {
+            const tbody = document.getElementById('drinksList');
+            tbody.innerHTML = '';
+            const drinks = categories[currentCategory];
+            
+            for (const drink of drinks) {
+                const row = document.createElement('tr');
+                const count = counts[currentCategory][drink] || 0;
+                
+                // Drank naam
+                const cellName = document.createElement('td');
+                cellName.textContent = drink;
+                row.appendChild(cellName);
+                
+                // Totaal count
+                const cellCount = document.createElement('td');
+                cellCount.className = 'totaal';
+                cellCount.id = 'count-' + drink.replace(/ /g, '-');
+                cellCount.textContent = count;
+                row.appendChild(cellCount);
+                
+                // +1 knop
+                const cell1 = document.createElement('td');
+                const btn1 = document.createElement('button');
+                btn1.className = 'btn-plus';
+                btn1.textContent = '+1';
+                btn1.addEventListener('click', function() { add(drink, 1); });
+                cell1.appendChild(btn1);
+                row.appendChild(cell1);
+                
+                // +5 knop
+                const cell2 = document.createElement('td');
+                const btn5 = document.createElement('button');
+                btn5.className = 'btn-plus';
+                btn5.textContent = '+5';
+                btn5.addEventListener('click', function() { add(drink, 5); });
+                cell2.appendChild(btn5);
+                row.appendChild(cell2);
+                
+                // -1 knop
+                const cell3 = document.createElement('td');
+                const btnm1 = document.createElement('button');
+                btnm1.className = 'btn-minus';
+                btnm1.textContent = '-1';
+                btnm1.addEventListener('click', function() { subtract(drink, 1); });
+                cell3.appendChild(btnm1);
+                row.appendChild(cell3);
+                
+                // -5 knop
+                const cell4 = document.createElement('td');
+                const btnm5 = document.createElement('button');
+                btnm5.className = 'btn-minus';
+                btnm5.textContent = '-5';
+                btnm5.addEventListener('click', function() { subtract(drink, 5); });
+                cell4.appendChild(btnm5);
+                row.appendChild(cell4);
+                
+                tbody.appendChild(row);
+            }
+            updateTotals();
+        }
+        
+        function add(drink, amount) {
+            counts[currentCategory][drink] = (counts[currentCategory][drink] || 0) + amount;
+            updateUI(drink);
+        }
+        
+        function subtract(drink, amount) {
+            counts[currentCategory][drink] = Math.max(0, (counts[currentCategory][drink] || 0) - amount);
+            updateUI(drink);
+        }
+        
+        function updateUI(drink) {
+            const id = 'count-' + drink.replace(/ /g, '-');
+            const cell = document.getElementById(id);
+            if (cell) cell.textContent = counts[currentCategory][drink];
+            updateTotals();
+            saveData();
+        }
+        
+        function updateTotals() {
+            let total = 0;
+            for (const drink of categories[currentCategory]) {
+                total += counts[currentCategory][drink] || 0;
+            }
+            document.getElementById('grandTotal').textContent = total;
+        }
+        
+        function updateTime() {
+            const now = new Date();
+            const elapsed = Math.floor((now - startTime) / 1000);
+            const h = Math.floor(elapsed / 3600);
+            const m = Math.floor((elapsed % 3600) / 60);
+            const s = elapsed % 60;
+            const h2 = String(h).padStart(2, '0');
+            const m2 = String(m).padStart(2, '0');
+            const s2 = String(s).padStart(2, '0');
+            document.getElementById('timeDisplay').textContent = h2 + ':' + m2 + ':' + s2;
+        }
+        
+        function resetAll() {
+            if (confirm('Alles resetten?')) {
+                counts = initializeCounts();
+                saveData();
+                initTable();
+            }
+        }
+        
+        function showExportMenu() {
+            document.getElementById('exportModal').style.display = 'block';
+        }
+        
+        function closeModal() {
+            document.getElementById('exportModal').style.display = 'none';
+        }
+        
+        window.onclick = function(event) {
+            const modal = document.getElementById('exportModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+        
+        function getExportFilename(ext) {
+            const now = new Date();
+            const d = String(now.getDate()).padStart(2, '0');
+            const m = String(now.getMonth() + 1).padStart(2, '0');
+            const y = now.getFullYear();
+            let name = 'drankenlijst_' + d + '-' + m + '-' + y;
+            if (eventName) {
+                name = eventName + '_' + d + '-' + m + '-' + y;
+            }
+            return name + '_' + now.getTime() + ext;
+        }
+        
+        function exportAsCSV() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('nl-NL');
+            const timeStr = now.toLocaleTimeString('nl-NL');
+            
+            let lines = [];
+            lines.push('DRANKENLIJST');
+            if (eventName) lines.push('Naam,' + eventName);
+            lines.push('Datum,' + dateStr);
+            lines.push('Tijd,' + timeStr);
+            lines.push('');
+            
+            for (const cat in categories) {
+                lines.push(cat);
+                let catTotal = 0;
+                for (const drink of categories[cat]) {
+                    const count = counts[cat][drink] || 0;
+                    lines.push(drink + ',' + count);
+                    catTotal += count;
+                }
+                lines.push('Subtotaal,' + catTotal);
+                lines.push('');
+            }
+            
+            let grandTotal = 0;
+            for (const cat in categories) {
+                for (const drink of categories[cat]) {
+                    grandTotal += counts[cat][drink] || 0;
+                }
+            }
+            lines.push('TOTAAL,' + grandTotal);
+            
+            const csv = lines.join('\n');
+            downloadFile(csv, getExportFilename('.csv'), 'text/csv');
+            closeModal();
+        }
+        
+        function exportAsExcel() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('nl-NL');
+            const timeStr = now.toLocaleTimeString('nl-NL');
+            
+            let lines = [];
+            lines.push('DRANKENLIJST');
+            if (eventName) lines.push('Naam\t' + eventName);
+            lines.push('Datum\t' + dateStr);
+            lines.push('Tijd\t' + timeStr);
+            lines.push('');
+            
+            for (const cat in categories) {
+                lines.push(cat);
+                let catTotal = 0;
+                for (const drink of categories[cat]) {
+                    const count = counts[cat][drink] || 0;
+                    lines.push(drink + '\t' + count);
+                    catTotal += count;
+                }
+                lines.push('Subtotaal\t' + catTotal);
+                lines.push('');
+            }
+            
+            let grandTotal = 0;
+            for (const cat in categories) {
+                for (const drink of categories[cat]) {
+                    grandTotal += counts[cat][drink] || 0;
+                }
+            }
+            lines.push('TOTAAL\t' + grandTotal);
+            
+            const txt = lines.join('\n');
+            downloadFile(txt, getExportFilename('.xlsx'), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            closeModal();
+        }
+        
+        function exportAsText() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('nl-NL');
+            const timeStr = now.toLocaleTimeString('nl-NL');
+            
+            let lines = [];
+            lines.push('===================================');
+            lines.push('DRANKENLIJST');
+            lines.push('===================================');
+            if (eventName) lines.push('Naam: ' + eventName);
+            lines.push('Datum: ' + dateStr);
+            lines.push('Tijd: ' + timeStr);
+            lines.push('');
+            
+            for (const cat in categories) {
+                lines.push('--- ' + cat + ' ---');
+                let catTotal = 0;
+                for (const drink of categories[cat]) {
+                    const count = counts[cat][drink] || 0;
+                    lines.push(drink + ': ' + count);
+                    catTotal += count;
+                }
+                lines.push('Subtotaal: ' + catTotal);
+                lines.push('');
+            }
+            
+            let grandTotal = 0;
+            for (const cat in categories) {
+                for (const drink of categories[cat]) {
+                    grandTotal += counts[cat][drink] || 0;
+                }
+            }
+            lines.push('===================================');
+            lines.push('TOTAAL: ' + grandTotal);
+            lines.push('===================================');
+            
+            const text = lines.join('\n');
+            downloadFile(text, getExportFilename('.txt'), 'text/plain');
+            closeModal();
+        }
+        
+        function downloadFile(content, filename, mimeType) {
+            try {
+                const blob = new Blob([content], { type: mimeType });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = filename;
+                document.body.appendChild(link);
+                
+                // Probeer normale click, fallback voor iPad
+                if (navigator.userAgent.match(/iPad/i)) {
+                    // iPad: toon dialog met data
+                    const text = mimeType.includes('json') ? content : content;
+                    alert('Kopieer deze tekst:\n\n' + text.substring(0, 200) + '...\n\nDownload werkt beter op een computer.');
+                } else {
+                    link.click();
+                }
+                
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            } catch(e) {
+                alert('Download heeft een fout: ' + e.message);
+            }
+        }
+        
+        // Initialisatie functie
+        function initializeApp() {
+            try {
+                console.log('App initialisatie gestart...');
+                
+                // Zorg dat counts altijd geïnitialiseerd is
+                counts = loadData();
+                console.log('Counts geladen:', Object.keys(counts).length > 0 ? 'OK' : 'LEEG');
+                
+                if (!counts || Object.keys(counts).length === 0) {
+                    console.log('Counts opnieuw initialiseren...');
+                    counts = initializeCounts();
+                }
+                
+                console.log('Event name laden...');
+                loadEventName();
+                
+                console.log('Tabs initialiseren...');
+                initTabs();
+                
+                console.log('Tabel initialiseren...');
+                initTable();
+                
+                console.log('Timer starten...');
+                setInterval(updateTime, 1000);
+                
+                console.log('App succesvol geïnitialiseerd!');
+            } catch(e) {
+                console.error('Initialization error:', e);
+                console.error('Stack:', e.stack);
+                alert('App kon niet volledig laden:\n\n' + e.message + '\n\nCheck console voor details.');
+            }
+        }
+        
+        // Voer meteen uit als script geladen is
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeApp);
+        } else {
+            initializeApp();
+        }
+    </script>
+</body>
+</html>
